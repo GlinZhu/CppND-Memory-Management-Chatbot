@@ -2,7 +2,8 @@
 #define CHATGUI_H_
 
 #include <wx/wx.h>
-#include<memory>
+#include <memory>
+
 class ChatLogic; // forward declaration
 
 // middle part of the window containing the dialog between user and chatbot
@@ -27,7 +28,7 @@ public:
     ChatBotPanelDialog(wxWindow *parent, wxWindowID id);
     ~ChatBotPanelDialog();
 
-    // getter / setter // return a non-owning pointer
+    // getter / setter
     ChatLogic* GetChatLogicHandle() { return _chatLogic.get(); }
 
     // events

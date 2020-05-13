@@ -1,10 +1,9 @@
 #include "graphedge.h"
 #include "graphnode.h"
-#include<iostream>
+
 GraphNode::GraphNode(int id)
 {
     _id = id;
-    //std::cout<<"GraphNode constructor"<<"\n";
 }
 
 GraphNode::~GraphNode()
@@ -13,7 +12,7 @@ GraphNode::~GraphNode()
     ////
 
     //delete _chatBot; 
-    //std::cout<<"GraphNode destructor"<<"\n";
+
     ////
     //// EOF STUDENT CODE
 }

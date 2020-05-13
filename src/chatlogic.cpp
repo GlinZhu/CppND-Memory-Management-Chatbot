@@ -16,7 +16,7 @@ ChatLogic::ChatLogic()
 {
     //// STUDENT CODE
     ////
-    //std::cout << "ChatLogic Constructor" << std::endl;
+
     // create instance of chatbot
     //_chatBot = new ChatBot("../images/chatbot.png");
 
@@ -34,7 +34,7 @@ ChatLogic::~ChatLogic()
 
     // delete chatbot instance
     //delete _chatBot;
-    //std::cout<<"delete _chatBot instance"<<"\n";
+
     // delete all nodes
     //for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
     //{
@@ -45,7 +45,7 @@ ChatLogic::~ChatLogic()
     //for (auto it = std::begin(_edges); it != std::end(_edges); ++it)
     //{
     //    delete *it;
-    //}
+   // }
 
     ////
     //// EOF STUDENT CODE
@@ -127,13 +127,11 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                         ////
 
                         // check if node with this ID exists already
-                        auto newNode = std::find_if(_nodes.begin(), _nodes.end(), [&id](std::unique_ptr<GraphNode>const& node) { return node->GetID() == id; });
+                        auto newNode = std::find_if(_nodes.begin(), _nodes.end(), [&id](std::unique_ptr<GraphNode>& node) { return node.get()->GetID() == id; });
 
                         // create new element if ID does not yet exist
                         if (newNode == _nodes.end())
                         {
-                            //_nodes.emplace_back(new GraphNode(id));
-                            //std::unique_ptr<GraphNode> new_no=std::make_unique<GraphNode>(id);
                             _nodes.emplace_back(std::make_unique<GraphNode>(id));
                             newNode = _nodes.end() - 1; // get iterator to last element
 
@@ -158,16 +156,15 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                         if (parentToken != tokens.end() && childToken != tokens.end())
                         {
                             // get iterator on incoming and outgoing node via ID search
-                            auto parentNode = std::find_if(_nodes.begin(), _nodes.end(), [&parentToken](std::unique_ptr<GraphNode> const& node) { return node->GetID() == std::stoi(parentToken->second); });
-                            auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](std::unique_ptr<GraphNode> const& node) { return node->GetID() == std::stoi(childToken->second); });
+                            auto parentNode = std::find_if(_nodes.begin(), _nodes.end(), [&parentToken](std::unique_ptr<GraphNode>& node) { return node.get()->GetID() == std::stoi(parentToken->second); });
+                            auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](std::unique_ptr<GraphNode>& node) { return node.get()->GetID() == std::stoi(childToken->second); });
 
                             // create new edge
                             //GraphEdge *edge = new GraphEdge(id);
-                            //std::unique_ptr<GraphEdge> edge(new GraphEdge(id));
-                            std::unique_ptr<GraphEdge> edge=std::make_unique<GraphEdge>(id);
-                            edge->SetChildNode(childNode.base()->get());
-                            edge->SetParentNode(parentNode.base()->get());
-                            //_edges.push_back(std::move(edge));
+                            auto edge=std::make_unique<GraphEdge>(id);
+                            edge->SetChildNode((*childNode).get());
+                            edge->SetParentNode((*parentNode).get());
+                            //_edges.push_back(edge);
 
                             // find all keywords for current node
                             AddAllTokensToElement("KEYWORD", tokens, *edge.get());
@@ -223,7 +220,8 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
     //_chatBot->SetRootNode(rootNode);
     //rootNode->MoveChatbotHere(_chatBot);
     
-    ChatBot chat=ChatBot("../images/chatbot.png");
+    ChatBot chat("../images/chatbot.png");
+    SetChatbotHandle(&chat);
     chat.SetChatLogicHandle(this);
     chat.SetRootNode(rootNode);
     rootNode->MoveChatbotHere(std::move(chat));
